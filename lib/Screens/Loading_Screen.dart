@@ -20,7 +20,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     SharedPreferences localData = await SharedPreferences.getInstance();
     if (localData.containsKey('id')) {
       var id = await localData.get('id');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(id)));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(id)));
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
   }

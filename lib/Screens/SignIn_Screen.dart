@@ -7,7 +7,6 @@ import 'package:freej/models/constances.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:freej/Screens/SignUp_Screen.dart';
 import 'package:freej/Screens/Verify_Screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -17,23 +16,10 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   String id;
 
-//  @override
-//  void initState() async {
-//    SharedPreferences localData = await SharedPreferences.getInstance();
-//    if (localData.containsKey('id')) {
-//      id = await localData.get('id');
-//      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(id)));
-//    }
-//  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {},
-      /*
-        Future.value(
-            false); //return a `Future` with false value so this route cant be popped or closed.
-      },*/
       child: SafeArea(
         child: Scaffold(
           backgroundColor: k_DarkPurple,

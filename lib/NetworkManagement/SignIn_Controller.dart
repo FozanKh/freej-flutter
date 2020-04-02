@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:freej/Screens/Verify_Screen.dart';
@@ -74,10 +73,9 @@ class SignInController {
   }
 
   Future<bool> verifySignUp({@required String id, @required String otp}) async {
-//    String email = '$id@kfupm.edu.sa';
-    String email = 'fozan.kh@icloud.com';
+    String email = '$id@kfupm.edu.sa';
 
-    if (/*await sendOTP(email: email, otp: otp)*/ true) {
+    if (await sendOTP(email: email, otp: otp)) {
       print("code Sent");
       return true;
     } else

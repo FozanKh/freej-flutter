@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:freej/models/constances.dart';
 import 'package:freej/NetworkManagement/SignIn_Controller.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'Main_Screen.dart';
 
@@ -23,7 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF0A0E21),
+        backgroundColor: k_DarkPurple,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
