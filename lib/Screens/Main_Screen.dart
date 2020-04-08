@@ -6,6 +6,7 @@ import 'package:freej/Screens/Profile_Screen.dart';
 import 'package:freej/Screens/Activities_Screen.dart';
 
 class MainScreen extends StatefulWidget {
+  static const route = 'MainScreen';
   MainScreen(this.id);
   final id;
   @override

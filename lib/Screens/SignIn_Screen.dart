@@ -9,13 +9,16 @@ import 'package:freej/Screens/SignUp_Screen.dart';
 import 'package:freej/Screens/Verify_Screen.dart';
 
 class SignInScreen extends StatefulWidget {
+  static const route = 'SignInScreen';
+  static String id;
+  static String getId() => id;
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  String id;
-
+  String id = SignInScreen.getId();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -49,15 +52,26 @@ class _SignInScreenState extends State<SignInScreen> {
                   onPressed: () async {
                     SignInController sign = SignInController(id: id);
                     if (id != null) {
-                      if (await sign.isSignedUp(ID: id)) {
+                      if (false) {
+//                      if (await sign.isSignedUp(ID: id)) {
                         var result = await Navigator.push(
                             context, MaterialPageRoute(builder: (context) => VerifyScreen(id: id)));
                         if (result)
                           Navigator.push(
                               context, MaterialPageRoute(builder: (context) => MainScreen(id)));
                       } else {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => SignUpScreen(id)));
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) => SingleChildScrollView(
+                            child: Container(
+                              padding:
+                                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                              child: SignUpScreen(),
+                            ),
+                          ),
+                        );
                       }
                     }
                   }),

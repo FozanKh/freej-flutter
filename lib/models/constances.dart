@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-const Color k_DarkPurple = Color(0xFF0A0E21);
-const kActiveCardColour = Color(0xFF1D1E33);
-const kInactiveCardColour = Color(0xFF111328);
-const TextStyle k_LargeTextStyle = TextStyle(
+const k_DarkPurple = Color(0xFF0A0E21);
+const k_DarkPurplelight = Color(0x550A0E21);
+const k_ActiveCardColour = Color(0xFF1D1E33);
+const k_InactiveCardColour = Color(0xFF111328);
+const k_LargeTextStyle = TextStyle(
   fontSize: 50,
   color: Colors.white70,
   fontFamily: 'BalooDa2',

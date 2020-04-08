@@ -8,6 +8,8 @@ import 'package:freej/NetworkManagement/SignIn_Controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyScreen extends StatefulWidget {
+  static const route = 'VerifyScreen';
+
   VerifyScreen({@required this.id = null});
   final id;
   @override

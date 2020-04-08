@@ -6,6 +6,7 @@ import 'package:freej/models/constances.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
+  static const route = 'LoadingScreen';
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }

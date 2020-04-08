@@ -2,91 +2,82 @@ import 'package:flutter/material.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 import 'package:freej/models/constances.dart';
 import 'package:freej/NetworkManagement/SignIn_Controller.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'Main_Screen.dart';
+import 'SignIn_Screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  SignUpScreen(this.id);
-  final id;
-
-  @override
-  _SignUpScreenState createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  ProgressDialog pr;
+class SignUpScreen extends StatelessWidget {
+  static const route = 'SignUpScreen';
+  String id = SignInScreen.getId();
   String FName;
   String LName;
   String BNo;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: k_DarkPurple,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Please Sign Up",
-              style: k_LargeTextStyle.copyWith(fontSize: 30),
-            ),
-            Text(
-              "Enter Your Information",
-              style: k_LargeTextStyle.copyWith(fontSize: 30),
-            ),
-            SizedBox(height: 100),
-            k_PlaceHolder(BeautyTextfield(
-              placeholder: 'First Name',
-              cornerRadius: BorderRadius.all(Radius.circular(20)),
-              margin: EdgeInsets.all(0),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              prefixIcon: Icon(Icons.perm_identity),
-              inputType: TextInputType.text,
-              onChanged: (value) {
-                FName = value;
-              },
-            )),
-            k_PlaceHolder(BeautyTextfield(
-              placeholder: 'Last Name',
-              cornerRadius: BorderRadius.all(Radius.circular(20)),
-              margin: EdgeInsets.all(0),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              prefixIcon: Icon(Icons.perm_identity),
-              inputType: TextInputType.text,
-              onChanged: (value) {
-                LName = value;
-              },
-            )),
-            k_PlaceHolder(BeautyTextfield(
-              placeholder: 'Building Number',
-              cornerRadius: BorderRadius.all(Radius.circular(20)),
-              margin: EdgeInsets.all(0),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              prefixIcon: Icon(Icons.perm_identity),
-              inputType: TextInputType.number,
-              onChanged: (value) {
-                BNo = value;
-              },
-            )),
-            SizedBox(height: 20),
-            k_BasicButton(
-                text: 'SignUp',
-                onPressed: () async {
-                  pr = ProgressDialog(context);
-                  pr.show();
-                  var result = await SignInController().signUpStudent(
-                      BNo: BNo, FName: FName, LName: LName, id: widget.id, context: context);
-                  pr.hide();
-                  if (result)
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => MainScreen(widget.id)));
-                }),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        color: k_InactiveCardColour,
+      ),
+      padding: EdgeInsets.only(top: 50, bottom: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Please Sign Up",
+            style: k_LargeTextStyle.copyWith(fontSize: 30),
+          ),
+          Text(
+            "Enter Your Information",
+            style: k_LargeTextStyle.copyWith(fontSize: 30),
+          ),
+          SizedBox(height: 100),
+          k_PlaceHolder(BeautyTextfield(
+            placeholder: 'First Name',
+            cornerRadius: BorderRadius.all(Radius.circular(20)),
+            margin: EdgeInsets.all(0),
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            prefixIcon: Icon(Icons.perm_identity),
+            inputType: TextInputType.text,
+            onChanged: (value) {
+              FName = value;
+            },
+          )),
+          k_PlaceHolder(BeautyTextfield(
+            placeholder: 'Last Name',
+            cornerRadius: BorderRadius.all(Radius.circular(20)),
+            margin: EdgeInsets.all(0),
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            prefixIcon: Icon(Icons.perm_identity),
+            inputType: TextInputType.text,
+            onChanged: (value) {
+              LName = value;
+            },
+          )),
+          k_PlaceHolder(BeautyTextfield(
+            placeholder: 'Building Number',
+            cornerRadius: BorderRadius.all(Radius.circular(20)),
+            margin: EdgeInsets.all(0),
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            prefixIcon: Icon(Icons.perm_identity),
+            inputType: TextInputType.number,
+            onChanged: (value) {
+              BNo = value;
+            },
+          )),
+          SizedBox(height: 20),
+          k_BasicButton(
+              text: 'SignUp',
+              onPressed: () async {
+                var result = await SignInController()
+                    .signUpStudent(BNo: BNo, FName: FName, LName: LName, id: id, context: context);
+                if (result)
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(id)));
+              }),
+        ],
       ),
     );
   }
