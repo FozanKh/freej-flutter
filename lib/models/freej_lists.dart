@@ -5,21 +5,25 @@ import 'package:freej/models/freej_tile.dart';
 import 'package:http/http.dart' as http;
 import 'package:freej/models/student.dart';
 
-const getAnnouncementURL = 'http://freejapp.com/FreejAppRequest/GetAnnouncements.php';
-const getAllBuildingsURL = 'http://freejapp.com/FreejAppRequest/getAllBuildings.php';
-//const getActivitiesURL = "http://freejapp.com/FreejAppRequest/GetActivities.php";
+const GetAnnouncementURL = 'http://freejapp.com/FreejAppRequest/GetAnnouncements.php';
+const GetAllBuildingsURL = 'http://freejapp.com/FreejAppRequest/getAllBuildings.php';
+const GetStudentActivitiesURL = 'http://freejapp.com/FreejAppRequest/GetActivitiesPerStudent.php';
 const GetSessionDataURL = 'http://freejapp.com/FreejAppRequest/iOSApp/GetSessionData.php';
+//const GetActivitiesURL = "http://freejapp.com/FreejAppRequest/GetActivities.php";
+const PostAnnouncementURL = "http://freejapp.com/FreejAppRequest/PostAnnouncements.php";
+const PostActivityURL = "http://freejapp.com/FreejAppRequest/PostActivity.php";
 
 class FreejLists extends ChangeNotifier {
   Student student;
   Map<String, String> sessionData = {};
   List<FreejTile> announcements = [];
   List<FreejTile> activities = [];
-  List<Text> buildings = [];
+  List<FreejTile> studentActivities = [];
   List<dynamic> activityTypes = [];
+  List<Text> buildings = [];
   String groupURL;
 
-  Future<void> getSessionData() async {
+  Future<void> getSessionData({bool notify = false}) async {
     print('BNo = ${student.BNo}, UserID = ${student.UserID}');
     http.Response response =
         await http.post(GetSessionDataURL, body: {'BNo': student.BNo, 'UserID': student.UserID});
@@ -72,13 +76,31 @@ class FreejLists extends ChangeNotifier {
       }
       buildings = tempTextList;
       print('BuildingsListUpdated');
+      getStudentActivities();
+      if (notify) notifyListeners();
     }
   }
 
 //--------------------------------------------------------------------------------------------------
 
+  Future<bool> addAnnouncement({String anTID, String description, String title}) async {
+    Map<String, String> param = {
+      'AnTID': anTID,
+      'UserID': student.UserID,
+      'Title': title,
+      'Descrp': description,
+      'Stat': 'Active',
+    };
+    http.Response response = await http.post(PostAnnouncementURL, body: param);
+    if (response.statusCode == 201) {
+      await refreshAnnouncement();
+      return true;
+    } else
+      return false;
+  }
+
   Future<void> refreshAnnouncement() async {
-    http.Response response = await http.post(getAnnouncementURL);
+    http.Response response = await http.post(GetAnnouncementURL);
     var data = jsonDecode(response.body);
     List<FreejTile> tempList = [];
     for (var announcement in data) {
@@ -88,14 +110,28 @@ class FreejLists extends ChangeNotifier {
           id: announcement['AnID']));
     }
     announcements = (tempList);
-  }
-
-  addAnnouncement(String title, String description, String id) {
-    announcements.add(FreejTile(title: title, description: description, id: id));
     notifyListeners();
   }
 
 //--------------------------------------------------------------------------------------------------
+
+  Future<bool> addActivity({String acTID, String description, String title}) async {
+    Map<String, String> param = {
+      'AcTID': acTID,
+      'UserID': student.UserID,
+      'Title': title,
+      'Descrp': description,
+      'SDate': '0000',
+      'IconURL': '0',
+      'Stat': 'Active'
+    };
+    http.Response response = await http.post(PostActivityURL, body: param);
+    if (response.statusCode == 201) {
+      await refreshActivities();
+      return true;
+    } else
+      return false;
+  }
 
   Future<void> refreshActivities() async {
     //TODO: Replace GetSessionURL with getActivitiesURL
@@ -116,9 +152,26 @@ class FreejLists extends ChangeNotifier {
         print('ActivityListUpdated');
       }
       activities = temp;
+      notifyListeners();
     }
   }
 
 //--------------------------------------------------------------------------------------------------
-
+  Future<void> getStudentActivities() async {
+    http.Response response =
+        await http.post(GetStudentActivitiesURL, body: {'UserID': student.UserID});
+    if (response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      List<FreejTile> temp = [];
+      for (var activity in data) {
+        temp.add(FreejTile(
+            title: activity['Title'],
+            description: activity['Descrp'],
+            id: activity['AcID'],
+            deletable: true));
+      }
+      studentActivities = temp;
+      notifyListeners();
+    }
+  }
 }

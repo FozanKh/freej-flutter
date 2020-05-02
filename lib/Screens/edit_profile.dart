@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:freej/models/constances.dart';
 import 'package:freej/models/freej_lists.dart';
 import 'package:freej/models/student.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
-const UpdateStudentInfoURL = 'http://freejapp.com/FreejAppRequest/UpdateUserInfo.php';
 
 class EditProfile extends StatelessWidget {
   EditProfile(this.student);
@@ -93,21 +90,17 @@ class EditProfile extends StatelessWidget {
                   height: 40,
                 ),
                 kBasicButton(
+                  text: 'SUBMIT',
                   onPressed: () async {
-                    param.addAll({
-                      'KFUPMID': student.KFUPMID,
-                      'FName': (newFName != null) ? newFName : student.FName,
-                      'LName': (newLName != null) ? newLName : student.LName,
-                      'BNo': (newBNo != null) ? newBNo : student.BNo
-                    });
-                    http.Response response = await http.post(UpdateStudentInfoURL, body: param);
-                    if (response.statusCode == 201) {
-                      student.getStudentData();
-                      Provider.of<FreejLists>(context, listen: false).getSessionData();
+                    bool result = await student.updateStudentData(
+                        newFName: newFName, newLName: newLName, newBNo: newBNo);
+
+                    if (result) {
+                      Provider.of<FreejLists>(context, listen: false).getSessionData(notify: true);
                       Navigator.pop(context);
                     }
+                    //TODO: Add else with err statement
                   },
-                  text: 'SUBMIT',
                 ),
               ],
             ),

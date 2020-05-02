@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:freej/models/constances.dart';
 import 'package:freej/models/freej_lists.dart';
-import 'package:freej/models/freej_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
-const GetMyActivitiesURL = 'http://freejapp.com/FreejAppRequest/GetActivitiesPerStudent.php';
-
+// ignore: non_constant_identifier_names
 class MyActivitiesView extends StatefulWidget {
   final UserID;
   MyActivitiesView(this.UserID);
@@ -17,34 +12,10 @@ class MyActivitiesView extends StatefulWidget {
 }
 
 class _MyActivitiesViewState extends State<MyActivitiesView> {
-  List<FreejTile> myActivitiesList = [];
-
-  @override
-  void initState() {
-    getMyActivities();
-  }
-
-  Future<void> getMyActivities() async {
-    http.Response response = await http.post(GetMyActivitiesURL, body: {'UserID': widget.UserID});
-    if (response.statusCode == 201) {
-      var data = jsonDecode(response.body);
-      List<FreejTile> temp = [];
-      for (var activity in data) {
-        temp.add(FreejTile(
-            title: activity['Title'],
-            description: activity['Descrp'],
-            id: activity['AcID'],
-            deletable: true));
-      }
-      myActivitiesList = temp;
-      setState(() {});
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<FreejLists>(
-      builder: (context, announcementList, child) => SafeArea(
+      builder: (context, Freej, child) => SafeArea(
         child: Scaffold(
           backgroundColor: kDarkPurple,
           body: Column(
@@ -78,8 +49,13 @@ class _MyActivitiesViewState extends State<MyActivitiesView> {
                   margin: EdgeInsets.fromLTRB(10, 25, 10, 50),
                   position: 'alone',
                   color: Colors.white,
-                  child: ListView(
-                    children: myActivitiesList,
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await Freej.getStudentActivities();
+                    },
+                    child: ListView(
+                      children: Freej.studentActivities,
+                    ),
                   ),
                 ),
               ),

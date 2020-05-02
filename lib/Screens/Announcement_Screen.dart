@@ -31,7 +31,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             builder: (context) => SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: AddAnnouncement(widget.student.UserID),
+                child: AddAnnouncement(),
               ),
             ),
           );
@@ -46,7 +46,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   Future<void> refreshAnnouncements() async {
     await Provider.of<FreejLists>(context, listen: false).refreshAnnouncement();
-    setState(() {});
   }
 
   @override
