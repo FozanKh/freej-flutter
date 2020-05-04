@@ -1,31 +1,28 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:freej/Screens/edit_profile.dart';
 import 'package:freej/models/constances.dart';
+import 'package:freej/models/freej_lists.dart';
+import 'package:freej/models/student.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:freej/Screens/my_activities_view.dart';
 
-const DeleteStudentURL = 'http://freejapp.com/FreejAppRequest/DeleteStudent.php';
-const WhatsAppURL = 'http://freejapp.com/FreejAppRequest/GetWhatsappURL.php';
-
 class ProfileScreen extends StatefulWidget {
-  final student;
+  final Student student;
   ProfileScreen(this.student);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-Future<void> logoutUser() async {
-  SharedPreferences localData = await SharedPreferences.getInstance();
-  await localData.clear();
-}
-
 class _ProfileScreenState extends State<ProfileScreen> {
+  Future<void> logoutUser() async {
+    SharedPreferences localData = await SharedPreferences.getInstance();
+    await localData.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,9 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onPressed: () async {
                         if (await assureDialog()) {
-                          http.Response response = await http
-                              .post(DeleteStudentURL, body: {'KFUPMID': widget.student.UserID});
-                          if (response.statusCode == 201) {
+                          if (await widget.student.deleteStudent()) {
                             await logoutUser();
                             Navigator.pop(context, 'MainScreenLogOut');
                           }
@@ -104,12 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: kSettingTextStyle,
                       ),
                       onPressed: () async {
-                        http.Response response =
-                            await http.post(WhatsAppURL, body: {'BNo': widget.student.BNo});
-                        print(response.statusCode);
-                        var data = jsonDecode(response.body)[0]['GroupURL'];
-                        if (data != null)
-                          Clipboard.setData(ClipboardData(text: data));
+                        String link = Provider.of<FreejLists>(context).groupURL;
+                        if (link != null)
+                          Clipboard.setData(ClipboardData(text: link));
                         else
                           Clipboard.setData(ClipboardData(text: 'No Link'));
                       },

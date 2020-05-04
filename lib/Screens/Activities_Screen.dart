@@ -25,13 +25,12 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   Future<void> refreshActivities() async {
     await Provider.of<FreejLists>(context, listen: false).refreshActivities();
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<FreejLists>(
-      builder: (context, Freej, child) => SafeArea(
+      builder: (context, freejController, child) => SafeArea(
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.grey.shade800,
@@ -44,7 +43,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 builder: (context) => SingleChildScrollView(
                   child: Container(
                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: AddActivity(widget.student.UserID),
+                    child: AddActivity(),
                   ),
                 ),
               );
@@ -92,7 +91,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                       await refreshActivities();
                       print('Announcement refreshed');
                     },
-                    child: ListView(children: Freej.activities),
+                    child: ListView(children: freejController.activities),
                   ),
                 ),
               ),
